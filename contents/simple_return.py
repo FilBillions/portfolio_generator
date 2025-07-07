@@ -11,7 +11,7 @@ class Simple_Return():
         if optional_df is not None:
             self.df = optional_df
         else:
-            df = yf.download(ticker, start, end, interval = interval, multi_level_index=False)
+            df = yf.download(ticker, start, end, interval = interval, multi_level_index=False, ignore_tz=True)
             self.df = df
         self.interval = interval
         self.start = start

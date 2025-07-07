@@ -29,7 +29,7 @@ class Conditional_Probability():
         if optional_df is not None:
             self.df = optional_df
         else:
-            df = yf.download(ticker, start, end, interval = interval, multi_level_index=False)
+            df = yf.download(ticker, start, end, interval = interval, multi_level_index=False, ignore_tz=True)
             self.df = df
         day_count = np.arange(1, len(self.df) + 1)
         self.df['Day Count'] = day_count

@@ -47,7 +47,8 @@ class Backtest_Port():
                     start=self.universe,
                     end=str(date.today() - timedelta(1)),
                     interval=self.interval,
-                    multi_level_index=False
+                    multi_level_index=False,
+                    ignore_tz=True
                 )
         #Dict of all tickers
         self.dictionary_of_tickers = self.ticker_weights.copy()
@@ -55,7 +56,7 @@ class Backtest_Port():
         self.ticker_list = [k for k in self.ticker_weights if 'algo' not in str(k).lower()]
         self.ticker_list = [k for k in self.dictionary_of_tickers if 'algo' not in k.lower()]
         # Download for all tickers without algo
-        self.df = yf.download(self.ticker_list, start = self.universe, end=str(date.today() - timedelta(1)), interval=self.interval, multi_level_index=True)
+        self.df = yf.download(self.ticker_list, start = self.universe, end=str(date.today() - timedelta(1)), interval=self.interval, multi_level_index=True, ignore_tz=True)
         self.df.dropna(inplace=True)
         # true starting dates are the dates where the latest security was IPO'd i.e not NAs
         # this is also the random number range
@@ -63,7 +64,7 @@ class Backtest_Port():
         self.true_end_date = self.df.index[-1] - timedelta(days=self.tie_in)
         print(f"Downloading SPY...")
         # You only need to download the true range for spy
-        self.spydf = yf.download('SPY', start = self.true_start_date, end = self.true_end_date, interval = self.interval, multi_level_index=False)
+        self.spydf = yf.download('SPY', start = self.true_start_date, end = self.true_end_date, interval = self.interval, multi_level_index=False, ignore_tz=True)
     def backtest(self):
         for i in range(self.arg):
             print(f"Backtest {i + 1} of {self.arg}...")

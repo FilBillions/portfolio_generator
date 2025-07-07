@@ -28,7 +28,7 @@ class Portfolio_Generator():
             self.df = self.df[self.df.index >= start]
             self.df = self.df[self.df.index <= end]
         else:
-            df = yf.download(self.ticker_list, start, end, interval=interval, multi_level_index=True)
+            df = yf.download(self.ticker_list, start, end, interval=interval, multi_level_index=True, ignore_tz=True)
             self.df = df
         #DropNA before return calcs
         self.df.dropna(inplace=True)
