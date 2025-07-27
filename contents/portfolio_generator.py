@@ -56,13 +56,13 @@ class Portfolio_Generator():
 
         if algo_dictionary is not None:
             #declare what algo you want to import
-            from conditional_probability_obj import Conditional_Probability # type: ignore
+            from mean_rev_strategy import Mean_Rev_BackTest # type: ignore
             # in the future when we have more algos, well have to do a dictionary within a dictionary.
             if isinstance(algo_dictionary, dict):
                 for dict_ticker in algo_dictionary:
-                    algo_df = Conditional_Probability(ticker=None, optional_df=algo_dictionary[dict_ticker])
+                    algo_df = Mean_Rev_BackTest(ticker=None, ma1=50, optional_df=algo_dictionary[dict_ticker])
                     algo_df.run_algo(start_date=self.start, end_date=self.end, return_table=False)
-                    algo_value = algo_df.backtest(print_statement=False, return_model_df=True)
+                    algo_value = algo_df.backtest_cash(print_statement=False, return_model_df=True)
                     self.port_df[f'{dict_ticker} Value'] = algo_value * self.full_dict[f'{dict_ticker}'] # <<< Fix input weighting
             else:
                 raise Exception('algo_dictionary is not a dictionary, please use a dictionary. Format <Ticker : yfinance download information>')
@@ -82,6 +82,9 @@ class Portfolio_Generator():
         if print_statement:
             print(f"Model Portfolio Result: {round(((self.port_df['Model Value'].iloc[-1] - self.port_df['Model Value'].iloc[0])/self.port_df['Model Value'].iloc[0]) * 100, 2)}%")
             print(f" from {self.port_df.index[0]} to {self.port_df.index[-1]}")
+            for col in self.port_df.columns:
+                if col != 'Model Value':
+                    print(f"{col} return: {round(((self.port_df[col].iloc[-1] - self.port_df[col].iloc[0])/self.port_df[col].iloc[0]) * 100, 2)}%")
         if return_table:
             return self.port_df
         if model_return:
